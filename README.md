@@ -17,9 +17,6 @@
 # estimateCoeffsNew.R
 # Script to estimate the “true” species distribution and sampling bias coefficients from real data (i.e. section 2.2 in MEE paper).
 # 
-# locationObject.r
-# Obsolete, ignore!
-#   
 # paperPlots.r
 # Script to generate the plots from the results for the MEE paper that reports this work.  Purely for information as cannot be run without results from experiments.
 # 
