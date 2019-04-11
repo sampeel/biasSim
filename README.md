@@ -1,7 +1,7 @@
 # biasSim
 #
 # Chapter 1 of thesis
-# Test Fithian et al (2015) model with less data, sample bias in PO data, and patchy sample locations in amalgamated PA data.
+# Test Fithian et al (2015) model with less data, sampling bias in PO data, and patchy sample locations in amalgamated PA data.
 
 # Script descriptions ...
 #
@@ -35,15 +35,15 @@
 # Script to set up the settings within the simulation.  These are set from other functions, do not change values in list here.
 # 
 # simFuncs.r
-# This script runs the simulations.  It has hard-wired numbers in function “runScenario” that will need to be changed to suit the research problem.  This function also sets up the rest of the scenario run and repeats the simulations via the function “runSim”.  Note that the simulations are setup to be run in parallel using the function mclapply (this may not be the appropriate parallelisation function for your machine, see package “parallel” for more details).  Please test that the settings are working by uncommenting and running the single run 
+# This script runs the simulations.  It has hard-wired numbers in function “runScenario” that will need to be changed to suit the research problem.  This function also sets up the rest of the scenario run and repeats the simulations via the function “runSim”.  Note that the simulations are setup to be run in parallel using the function mclapply (this may not be the appropriate parallelisation function for your machine, see package “parallel” for more details).  Please test that the settings are working by uncommenting and running the single run: 
 # #par1Res <- runSim(1, simObj, domainObj, cellObj, envirObj, biasObj, surveyObj, plotObj, BG)
-# before progressing to a parallel run (cores that fail just drop out and whilst there is some error catching, it is easier to incorrect setting errors through a single run).  Another hint for testing the setup is to set argument doCheckPlots to TRUE in function runScenario and evaluate the plots that are produced (are they what you expected given your problem).  
+# before progressing to a parallel run (cores that fail just drop out and whilst there is some error catching, it is easier to correct setting errors through a single run).  Another hint for testing the setup is to set argument doCheckPlots to TRUE in function runScenario and evaluate the plots that are produced (are they what you expected given your problem).  
 # 
 # startHereNew.r
 # This script is where the experiments are set up, run and results evaluated.  Mostly doesn’t contain functions just lines of codes for each experiment.  Note that running an experiment assumes that the data has been collected and processed into appropriate objects, true coefficients have been estimated, and the settings for the problem have been specified (hard-wired in script simFuncs.r).  A good place to start (despite the name of this script) would be to get the function “runScenario” (in simFuncs.r) working for one lot of parameter settings.
 # 
 # surveysObj.r
-# Script for the surveys object.  Initialises, simulates and saves the information about surveys (as these are not performed in every cell so are not contained in the cell level object).
+# Script for the surveys object.  Initialises, simulates and saves the information about surveys (as these are not performed in every cell so are not contained in the cells object).
 # 
 # utils.r
-# Script of random functions that are not necessarily just for this work.
+# Script of functions that are not necessarily just for this work.
