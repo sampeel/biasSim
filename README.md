@@ -47,3 +47,12 @@
 # 
 # utils.r
 # Script of functions that are not necessarily just for this work.
+#
+# Included data ...
+#
+# Data files included are BiasCovariates.RData, EnvirCovariates.RData, and TrueCoefficients.RData.  These were created from raw data during the setup phase.  Having these files already prepared (covariates are cropped and projected and stored in a data object ready for use by the simulation phase, true coefficients are those estimated by functions in 'estimateCoeffsNew.r') allows the user to skip some of the setup phase.  To do this change the hardwired variables in function runScenario (in file 'simFuncs.r'):
+#  inputDir <- paste0(getwd(), "/", "Input")
+#  useSavedData <- useSavedData 
+#  to the directory where these data files are stored and to TRUE for useSavedData. You can then run the function 'runScenarios' using this prepared data.
+
+
