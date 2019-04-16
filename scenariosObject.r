@@ -2439,7 +2439,8 @@ plotStatisticsComparisons <- function(whichExperiment, whichStats=c(1,1,2,3),
                                       xAxisLabels=NULL, xAxisTitle=NULL, xAxisLabelStyle=2,
                                       xAxisReverse=FALSE, 
                                       columnHeadings=paste("statistic",1:length(whichStats)),
-                                      diffPOIntRange=NULL, medianLines=TRUE) {
+                                      diffPOIntRange=NULL, medianLines=TRUE,
+                                      doPlotIdentifiers=FALSE) {
   
   # Plot a multiple statistics for a single experiment (i.e. plot coeff difference, correlation, 
   # etc., for an experiment).  
@@ -2470,6 +2471,7 @@ plotStatisticsComparisons <- function(whichExperiment, whichStats=c(1,1,2,3),
   #                   Set to NULL to use same y-axis range as other SDMs
   # medianLines:      True to include a line to indicate the median value per scenario of
   #                   each plot, false to not include.
+  # doPlotIdentifiers:If TRUE, add plot identifier letters (e.g. "(a)") to each sub-plot.
   
   # Get numbers of things to set up plotting layout.
   numPlotStats <- length(whichStats)
@@ -2602,7 +2604,7 @@ plotStatisticsComparisons <- function(whichExperiment, whichStats=c(1,1,2,3),
     omaPar[4] <- omaPar[4]+0.5
   }
   opar <- par(mfcol=c(numPlotSDMs*2,numPlotStats), oma = omaPar, mar = marPar, cex=0.66)
-  
+  plotIdentifier <- paste0("(",letters[1:(numPlotSDMs*2*numPlotStats)],")")
 
   # Calculate widths for violin plots for avg (accuracy) and SDs (precision), if necessary.
   if ( vioPlots ) {
@@ -2691,9 +2693,10 @@ plotStatisticsComparisons <- function(whichExperiment, whichStats=c(1,1,2,3),
     
     # Loop to plot accuracy and precision of each SDM for this statistic.    
     isFirstRow <- TRUE
-    for ( sdm in plotSDMs) {
+    for ( isdm in 1:numPlotSDMs) {
       # Plot accuracy statistics (a.k.a 'avg') for this SDM and this statistic.
       # Range of plot
+      sdm <- plotSDMs[isdm]
       if ( sdm == "PO" && ! is.null(diffPOIntRange) && whichStat == 1 && 1 %in% whichCoeffsForStat) {
         yaxisRange <- diffPOIntRange
       } else {
@@ -2801,6 +2804,19 @@ plotStatisticsComparisons <- function(whichExperiment, whichStats=c(1,1,2,3),
         lines(1:numScenarios, plotMedians, lty="dashed", col=medianCol)
       }
       
+      # Add plot identifier, if requested.
+      if ( doPlotIdentifiers ) {
+        if ( whichStat == 2 ) {
+          # Correlation statistic, place identifier at bottom of plot, not top.
+          identHere <- yaxisRange[1]
+          adjy <- -0.5
+        } else {
+          identHere <- yaxisRange[2]
+          adjy <- 1.5
+        }
+        whichIdent <- 1 + (isdm-1)*numPlotSDMs  + (stat-1)*numPlotSDMs*2 
+        text(x=1, y=identHere, label=plotIdentifier[whichIdent], adj=c(0,adjy), cex=0.8)
+      }
       
       # Plot precision statistics (a.k.a sd) for this SDM and this statistic.
       # Range of plot
@@ -2864,6 +2880,13 @@ plotStatisticsComparisons <- function(whichExperiment, whichStats=c(1,1,2,3),
       if ( medianLines ) {
         #points(1:numScenarios, plotMedians, pch="_", col=medianCol)
         lines(1:numScenarios, plotMedians, lty="dashed", col=medianCol)
+      }
+    
+      # Add plot identifier, if requested.
+      if ( doPlotIdentifiers ) {
+        identHere <- yaxisRange[2]
+        whichIdent <- 2 + (isdm-1)*numPlotSDMs  + (stat-1)*numPlotSDMs*2 
+        text(x=1, y=identHere, label=plotIdentifier[whichIdent], adj=c(0,1.5),cex=0.8)
       }
     }  # sdm's (or plot rows).
     
