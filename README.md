@@ -1,7 +1,10 @@
-# biasSim
+# About biasSim
 #
-# Chapter 1 of thesis
-# Test Fithian et al (2015) model with less data, sampling bias in PO data, and patchy sample locations in amalgamated PA data.
+# This code was used to perform the analysis and produce the results described in:
+#
+# Peel, S.L., Hill, N.A., Foster, S.D., Wotherspoon, S.J., Ghiglione, C. & Schiaparelli, S. (2019) Reliable species distributions are obtainable with sparse, patchy and biased data by leveraging over species and data types. Methods in Ecology and Evolution [accepted]
+#
+# and is provided here as a record of this work.  
 
 # Script descriptions ...
 #
@@ -50,9 +53,11 @@
 #
 # Included data ...
 #
-# Data files included are BiasCovariates.RData, EnvirCovariates.RData, and TrueCoefficients.RData.  These were created from raw data during the setup phase.  Having these files already prepared (covariates are cropped and projected and stored in a data object ready for use by the simulation phase, true coefficients are those estimated by functions in 'estimateCoeffsNew.r') allows the user to skip some of the setup phase.  To do this change the hardwired variables in function runScenario (in file 'simFuncs.r'):
-#  inputDir <- paste0(getwd(), "/", "Input")
-#  useSavedData <- useSavedData 
-#  to the directory where these data files are stored and to TRUE for useSavedData. You can then run the function 'runScenarios' using this prepared data.
+# Data files included are BiasCovariates.RData, EnvirCovariates.RData, and TrueCoefficients.RData.  These were created from raw data during the setup phase.  The covariates (Bias and Envir) are cropped, projected, have missing values replaced, the domain mask created, and are stored in a data object ready for use by the simulation phase.  The true coefficients are those created by using the functions in 'estimateCoeffsNew.r' with the 21 species of Ross Sea PA and PO data.  Having these files already prepared allows the user to skip some of the setup phase.  To do this change the hardwired variables 'inputDir' and 'useSavedData' in function runScenario (in file 'simFuncs.r') to the directory where these .RData files are stored and to TRUE for useSavedData. You can then run the function 'runScenarios' using this prepared data.  
+# Any run of the simulation will create a 'LastSimSettings.RData' in this same input directory.  It uses this data when the useSavedData = TRUE to check that the covariate data and true coefficients data was from a simulation with the same 'isCentred' setting (a different 'isCentred' setting in the last simulation will cause the data setup process to be performed).  If you change the data files that you are using, make sure that you also set useSavedData = FALSE in order to perform the data setup process on your new data (only need to do this once as this process will create the above .RData files so that you can set useSavedData = TRUE for the next run).
+#
+# Not included data ...
+#
+# The antarctic coast line polygon data and research base location and name data are not included here.  These are only used to make mapping more readable to the user (i.e. do not affect the experiments or the results).  They are useful for some of the check plots but not necessary. 
 
 
