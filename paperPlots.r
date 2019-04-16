@@ -9,7 +9,6 @@ library(sp)
 library(rgeos)
 library(parallel)
 library(vioplot)
-library(RColorBrewer)
 
 source("utils.r")
 source("cellsObj.r")
