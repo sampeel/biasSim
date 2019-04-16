@@ -34,7 +34,7 @@ runScenario <- function(numPA=2500, gammaMultiplier=1.0, deltaMultiplier=1.0, nu
   beta <- NULL                                                                # estimated below.
   gamma <- NULL                                                               # estimated below.
   delta <- NULL                                                               # estimated below.
-  lambda.formula <- "z ~ bath + I(log(chl)) + seaice"                         # log link assumed, area offset added if needed
+  lambda.formula <- "z ~ bath + I(log(chl)) + seaice"                         # cloglog (PA) or log (PO) link assumed, area offset added if needed
   bias.formula <- "z ~ bath"                                                  # log link assumed, area offset added if needed
   isCentred <- covarsCentred                                                  # Centre the covariate data (x_i - mean(x_i))
 
@@ -66,24 +66,23 @@ runScenario <- function(numPA=2500, gammaMultiplier=1.0, deltaMultiplier=1.0, nu
   # NB: x and y are assumed to be covariates, these are additional environment covariates.
   envirDir <- "~/Data/Environmental Rasters/"
   envirFiles <- c("sim-rst_bathymetry.grd",
-                  "sim-rst_sst_summer_climatology.grd",
                   "sim-rst_chl_summer_climatology.grd",
                   "sim-rst_seaice_summer_variability.grd")
-  envirNames <- c("bath", "sst", "chl", "seaice")                             # use same names as in lambda.formula!
+  envirNames <- c("bath", "chl", "seaice")                                    # use same names same as in lambda.formula above.
   maskFile <- paste0(envirDir, "sim-Mask.grd")
   maskValue <- NA
 
   # Sample bias info files.
   biasDir <-  envirDir
   biasFiles <-  c("sim-rst_bathymetry.grd")
-  biasNames <- c("bath")                                                      # Use same names as in bias.formula
+  biasNames <- c("bath")                                                      # Use same names same as in bias.formula above.
 
   # Coastline data
   # NB: data is SpatialPolygon in longlat projection (will be converted to simulation projection)
-  coastFile <-  "~/Data/Coastlines/southOceanPoly.RData"
+  coastFile <-  "~/Data/Coastlines/southOceanPoly.RData"                      # Set to "" if this file of data is not available.
 
-  # Research base data, csv formatted table data with long, lat and species columns.
-  baseFile <-  "~/Data/Research Stations/AntarcticBaseUniqueNames.csv"
+  # Research base data, csv formatted table data with long, lat and place name columns.
+  baseFile <-  "~/Data/Research Stations/AntarcticBaseUniqueNames.csv"        # Set to "" if this file of data is not available.
   baseXcolName <- "LONGITUDE"
   baseYcolName <- "LATITUDE"
   baseNamesColName <- "PLACE_NAME"
@@ -180,9 +179,14 @@ runScenario <- function(numPA=2500, gammaMultiplier=1.0, deltaMultiplier=1.0, nu
              countPerCell, surveyAreas, countData, PAData, POData, BGPoints,
              probObs, trueCoeffEstimates)) ) {
     # Get the coastline SpatialPolygons.
-    load(coastFile)
-    coastLine.longlat <- cm1
-    rm(cm1)
+    if ( file.exists(coastFile) ) {
+      load(coastFile)
+      coastLine.longlat <- cm1
+      rm(cm1)
+    } else {
+      warning("Specified coast line file does not exist.  Coast line layer will not be plotted.")
+      coastLine.longlat <- NULL
+    }
 
     # Get the research base names.
     SavedBaseNames <- makeFileName("ResearchBaseNames", inputDir, "RData")
@@ -197,15 +201,20 @@ runScenario <- function(numPA=2500, gammaMultiplier=1.0, deltaMultiplier=1.0, nu
 
     } else {
       # Read in and process raw data.
-      basesObj <- readDataTable(baseFile)
-      basesObj$data <- postProcessBaseData(x=basesObj$data[ ,baseXcolName],
-                                           y=basesObj$data[ ,baseYcolName],
-                                           base=basesObj$data[ ,baseNamesColName],
-                                           baseShort = basesObj$data[ ,baseNamesShortColName])
-      basesObj <- as.DataPoints(basesObj, xColName = "x", yColName="y")
-
-      # Save processed data for use in future.
-      save(basesObj, file=SavedBaseNames)
+      if ( file.exists(baseFile) ) {
+        basesObj <- readDataTable(baseFile)
+        basesObj$data <- postProcessBaseData(x=basesObj$data[ ,baseXcolName],
+                                             y=basesObj$data[ ,baseYcolName],
+                                             base=basesObj$data[ ,baseNamesColName],
+                                             baseShort = basesObj$data[ ,baseNamesShortColName])
+        basesObj <- as.DataPoints(basesObj, xColName = "x", yColName="y")
+  
+        # Save processed data for use in future.
+        save(basesObj, file=SavedBaseNames)
+      } else {
+        warning("Specified base names file does not exist.  Place names layer will not be plotted.")
+        basesObj <-  initDataObj()
+      }
     }
 
     # Set in the plotting object.
