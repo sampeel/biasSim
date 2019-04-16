@@ -43,7 +43,7 @@
 # before progressing to a parallel run (cores that fail just drop out and whilst there is some error catching, it is easier to correct setting errors through a single run).  Another hint for testing the setup is to set argument doCheckPlots to TRUE in function runScenario and evaluate the plots that are produced (are they what you expected given your problem).  
 # 
 # startHereNew.r
-# This script is where the experiments are set up, run and results evaluated.  Mostly doesn’t contain functions just lines of codes for each experiment.  Note that running an experiment assumes that the data has been collected and processed into appropriate objects, true coefficients have been estimated, and the settings for the problem have been specified (hard-wired in script simFuncs.r).  A good place to start (despite the name of this script) would be to get the function “runScenario” (in simFuncs.r) working for one lot of parameter settings.
+# This script is where the experiments are set up, run and results evaluated.  Mostly doesn’t contain functions just lines of codes for each experiment.  Note that running an experiment assumes that the data has been collected and processed into appropriate objects, true coefficients have been estimated, and the settings for the problem have been specified (hard-wired in script simFuncs.r).  A good place to start (despite the name of this script) would be to get the function “runScenario” (in simFuncs.r) working for one lot of parameter settings.  
 # 
 # surveysObj.r
 # Script for the surveys object.  Initialises, simulates and saves the information about surveys (as these are not performed in every cell so are not contained in the cells object).
@@ -59,5 +59,8 @@
 # Not included data ...
 #
 # The antarctic coast line polygon data and research base location and name data are not included here.  These are only used to make mapping more readable to the user (i.e. do not affect the experiments or the results).  They are useful for some of the check plots but not necessary. 
-
+#
+# Packages required ...
+# 
+# To run everything you will need the following R packages installed: raster, spatstat, mutlispeciesPP (https://sampeel/multispeciesPP version), sp, rgeos, parallel, vioplot.
 
